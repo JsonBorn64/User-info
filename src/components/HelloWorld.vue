@@ -41,8 +41,19 @@
   <table>
     <tbody>
       <tr>
-        <td>Разрешение</td>
+        <td>Разрешение экрана</td>
+        <td>
+          {{ Math.round(screen.width * window.devicePixelRatio) }}
+           х 
+          {{ Math.round(screen.height * window.devicePixelRatio) }}</td>
+      </tr>
+      <tr>
+        <td>Разрешение в браузере</td>
         <td>{{ screen.width }} х {{ screen.height }}</td>
+      </tr>
+      <tr>
+        <td>Кратность масштабирования интерфейса</td>
+        <td>{{ window.devicePixelRatio }} x</td>
       </tr>
       <tr>
         <td>Глубина цвета</td>
@@ -84,6 +95,10 @@
       <tr>
         <td>Сайт из которого сюда пришел</td>
         <td>{{ document?.referrer }}</td>
+      </tr>
+      <tr>
+        <td>Количество страниц в истории данной вкладки</td>
+        <td>{{ window.history.length }}</td>
       </tr>
       <tr>
         <td>Устройство мобильное</td>
@@ -188,6 +203,7 @@ export default {
     return {
       navigator: navigator,
       screen: screen,
+      window: window,
       connection: null,
       position: null,
       ipData: null,
