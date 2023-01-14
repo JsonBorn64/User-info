@@ -217,15 +217,27 @@
     <tbody>
       <tr>
         <td>alpha</td>
-        <td>{{ devicelight }}</td>
+        <td>{{ alpha }}</td>
       </tr>
       <tr>
         <td>beta</td>
-        <td>{{ deviceproximity }}</td>
+        <td>{{ beta }}</td>
       </tr>
       <tr>
         <td>gamma</td>
-        <td>{{ userproximity }}</td>
+        <td>{{ gamma }}</td>
+      </tr>
+      <tr>
+        <td>absolute</td>
+        <td>{{ absolute }}</td>
+      </tr>
+      <tr>
+        <td>webkitCompassAccuracy</td>
+        <td>{{ webkitCompassAccuracy }}</td>
+      </tr>
+      <tr>
+        <td>webkitCompassHeading</td>
+        <td>{{ webkitCompassHeading }}</td>
       </tr>
     </tbody>
   </table>
