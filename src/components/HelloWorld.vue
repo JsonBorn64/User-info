@@ -212,6 +212,23 @@
       </tr>
     </tbody>
   </table>
+  <h1>Device Orientation Event</h1>
+  <table>
+    <tbody>
+      <tr>
+        <td>alpha</td>
+        <td>{{ devicelight }}</td>
+      </tr>
+      <tr>
+        <td>beta</td>
+        <td>{{ deviceproximity }}</td>
+      </tr>
+      <tr>
+        <td>gamma</td>
+        <td>{{ userproximity }}</td>
+      </tr>
+    </tbody>
+  </table>
   <h1>Датчик света</h1>
   <table>
     <tbody>
@@ -249,6 +266,12 @@ export default {
       x: 0,
       y: 0,
       z: 0,
+      alpha: 0,
+      beta: 0,
+      gamma: 0,
+      absolute: '',
+      webkitCompassHeading: '',
+      webkitCompassAccuracy: '',
     }
   },
   methods: {
@@ -292,6 +315,14 @@ export default {
       } else {
         this.accelerometer = false
       }
+      window.addEventListener('deviceorientation', (e) => {
+        this.alpha = e.alpha
+        this.beta = e.beta
+        this.gamma = e.gamma
+        this.absolute = e.absolute
+        this.webkitCompassAccuracy = e.webkitCompassAccuracy
+        this.webkitCompassHeading = e.webkitCompassHeading
+      });
     }
   },
   created() {
