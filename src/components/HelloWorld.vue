@@ -282,13 +282,13 @@ export default {
         }
       }
       if ('Accelerometer' in this.window) {
-        const accelerometer = new Accelerometer();
-        accelerometer.addEventListener('reading', e => {
-          this.x = e.target.x
-          this.y = e.target.y
-          this.z = e.target.z
+        const acl = new Accelerometer({ frequency: 60 });
+        acl.addEventListener("reading", () => {
+          this.x = acl.x
+          this.y = acl.y
+          this.z = acl.z
         });
-        accelerometer.addEventListener('error', event => console.log(event.error.name, event.error.message));
+        acl.start();
       } else {
         this.accelerometer = false
       }
