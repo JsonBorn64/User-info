@@ -1,5 +1,5 @@
 <template>
-  <h1>Устройство</h1>
+  <h1 @click="drags = !drags">Устройство</h1>
   <table>
     <tbody>
       <tr>
@@ -292,11 +292,12 @@ export default {
       accelerationX: 0,
       accelerationY: 0,
       accelerationZ: 0,
+      drags: false
     }
   },
   watch: {
     alpha(newValue) {
-      if (!newValue) return
+      if (!newValue || !drags) return
       document.body.style.transformOrigin = `top center`;
       document.body.style.transform = `rotateZ(${newValue-90}deg)`
     }
