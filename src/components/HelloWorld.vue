@@ -35,10 +35,10 @@
         <td>Подключена ли зарядка:</td>
         <td>{{ batteryCharging }}</td>
       </tr>
-      <tr>
+      <!-- <tr>
         <td>Содержимое буфера обмена:</td>
         <td>{{ clipboard }}</td>
-      </tr>
+      </tr> -->
     </tbody>
   </table>
   <h1>Экран</h1>
@@ -235,41 +235,32 @@
       </tr>
     </tbody>
   </table>
-  <h1>Скорость вращения</h1>
+  <h1>Device Motion Event</h1>
   <table>
     <tbody>
       <tr>
-        <td>По оси x</td>
-        <td>{{ rotationRateX.toFixed(2) }}</td>
+        <td>rotationRateX</td>
+        <td>{{ rotationRateX.toFixed(2) }} deg/s</td>
       </tr>
       <tr>
-        <td>По оси y</td>
-        <td>{{ rotationRateY.toFixed(2) }}</td>
+        <td>rotationRateY</td>
+        <td>{{ rotationRateY.toFixed(2) }} deg/s</td>
       </tr>
       <tr>
-        <td>По оси z</td>
-        <td>{{ rotationRateZ.toFixed(2) }}</td>
+        <td>rotationRateZ</td>
+        <td>{{ rotationRateZ.toFixed(2) }} deg/s</td>
       </tr>
       <tr>
         <td>accelerationX</td>
-        <td>{{ accelerationX.toFixed(2) }}</td>
-      </tr>
-    </tbody>
-  </table>
-  <h1>Датчик света</h1>
-  <table>
-    <tbody>
-      <tr>
-        <td>devicelight</td>
-        <td>{{ devicelight }} lux</td>
+        <td>{{ accelerationX.toFixed(2) }} m/s²</td>
       </tr>
       <tr>
-        <td>deviceproximity</td>
-        <td>{{ deviceproximity }}</td>
+        <td>accelerationY</td>
+        <td>{{ accelerationY.toFixed(2) }} m/s²</td>
       </tr>
       <tr>
-        <td>userproximity</td>
-        <td>{{ userproximity }}</td>
+        <td>accelerationZ</td>
+        <td>{{ accelerationZ.toFixed(2) }} m/s²</td>
       </tr>
     </tbody>
   </table>
@@ -286,9 +277,6 @@ export default {
       position: null,
       ipData: null,
       clipboard: '',
-      deviceproximity: 0,
-      devicelight: 0,
-      userproximity: 0,
       x: 0,
       y: 0,
       z: 0,
@@ -301,7 +289,9 @@ export default {
       rotationRateX: 0,
       rotationRateY: 0,
       rotationRateZ: 0,
-      accelerationX: 0
+      accelerationX: 0,
+      accelerationY: 0,
+      accelerationZ: 0,
     }
   },
   methods: {
@@ -311,17 +301,6 @@ export default {
         .then(data => {
           this.ipData = data
         }).catch(err => console.log('Не удается получить айпи адрес: ', err))
-    },
-    lightSensor() {
-      this.window.ondeviceproximity = (event) => {
-        this.deviceproximity = event.value
-      }
-      this.window.ondevicelight = (event) => {
-        this.devicelight = event.value
-      }
-      this.window.onuserproximity = (event) => {
-        this.userproximity = event.value
-      }
     },
     accelerometr() {
       const acl = new Accelerometer({ frequency: 60 });
@@ -348,34 +327,31 @@ export default {
         this.rotationRateY = e.rotationRate.gamma
         this.rotationRateZ = e.rotationRate.alpha
         this.accelerationX = e.acceleration.x
+        this.accelerationY = e.acceleration.y
+        this.accelerationZ = e.acceleration.z
       });
     },
     getBattery() {
-      if ('getBattery' in navigator) {
-        navigator.getBattery().then(battery => {
+      navigator.getBattery().then(battery => {
+        this.batteryLevel = battery.level * 100;
+        this.batteryCharging = battery.charging;
+        this.batteryTimeRemaining = battery.dischargingTime;
+        battery.addEventListener('levelchange', () => {
           this.batteryLevel = battery.level * 100;
-          this.batteryCharging = battery.charging;
-          this.batteryTimeRemaining = battery.dischargingTime;
-
-          battery.addEventListener('levelchange', () => {
-            this.batteryLevel = battery.level * 100;
-          });
-
-          battery.addEventListener('chargingchange', () => {
-            this.batteryCharging = battery.charging;
-          });
-
-          battery.addEventListener('dischargingtimechange', () => {
-            this.batteryTimeRemaining = battery.dischargingTime;
-          });
         });
-      }
+        battery.addEventListener('chargingchange', () => {
+          this.batteryCharging = battery.charging;
+        });
+        battery.addEventListener('dischargingtimechange', () => {
+          this.batteryTimeRemaining = battery.dischargingTime;
+        });
+      });
     }
   },
   created() {
-    navigator.clipboard.readText().then(clipText => {
-      this.clipboard = clipText
-    });
+    // navigator.clipboard.readText().then(clipText => {
+    //   this.clipboard = clipText
+    // });
     if ('connection' in navigator) {
       this.connection = navigator.connection;
     }
@@ -385,7 +361,6 @@ export default {
       this.position = position;
     });
     this.getIpCity()
-    this.lightSensor()
     this.accelerometr()
     this.deviceOrientation()
     this.deviceMotion()
