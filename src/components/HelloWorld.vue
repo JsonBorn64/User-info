@@ -217,15 +217,15 @@
     <tbody>
       <tr>
         <td>alpha</td>
-        <td>{{ alpha }}</td>
+        <td>{{ alpha.toFixed(2) }}</td>
       </tr>
       <tr>
         <td>beta</td>
-        <td>{{ beta }}</td>
+        <td>{{ beta.toFixed(2) }}</td>
       </tr>
       <tr>
         <td>gamma</td>
-        <td>{{ gamma }}</td>
+        <td>{{ gamma.toFixed(2) }}</td>
       </tr>
       <tr>
         <td>absolute</td>
