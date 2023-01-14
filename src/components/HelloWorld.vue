@@ -194,15 +194,15 @@
     <tbody>
       <tr>
         <td>Координата x</td>
-        <td>{{ x.toFixed(2) }}</td>
+        <td>{{ x?.toFixed(2) }}</td>
       </tr>
       <tr>
         <td>Координата y</td>
-        <td>{{ y.toFixed(2) }}</td>
+        <td>{{ y?.toFixed(2) }}</td>
       </tr>
       <tr>
         <td>Координата z</td>
-        <td>{{ z.toFixed(2) }}</td>
+        <td>{{ z?.toFixed(2) }}</td>
       </tr>
     </tbody>
   </table>
@@ -240,27 +240,27 @@
     <tbody>
       <tr>
         <td>rotationRateX</td>
-        <td>{{ rotationRateX.toFixed(2) }} deg/s</td>
+        <td>{{ rotationRateX?.toFixed(2) }} deg/s</td>
       </tr>
       <tr>
         <td>rotationRateY</td>
-        <td>{{ rotationRateY.toFixed(2) }} deg/s</td>
+        <td>{{ rotationRateY?.toFixed(2) }} deg/s</td>
       </tr>
       <tr>
         <td>rotationRateZ</td>
-        <td>{{ rotationRateZ.toFixed(2) }} deg/s</td>
+        <td>{{ rotationRateZ?.toFixed(2) }} deg/s</td>
       </tr>
       <tr>
         <td>accelerationX</td>
-        <td>{{ accelerationX.toFixed(2) }} m/s²</td>
+        <td>{{ accelerationX?.toFixed(2) }} m/s²</td>
       </tr>
       <tr>
         <td>accelerationY</td>
-        <td>{{ accelerationY.toFixed(2) }} m/s²</td>
+        <td>{{ accelerationY?.toFixed(2) }} m/s²</td>
       </tr>
       <tr>
         <td>accelerationZ</td>
-        <td>{{ accelerationZ.toFixed(2) }} m/s²</td>
+        <td>{{ accelerationZ?.toFixed(2) }} m/s²</td>
       </tr>
     </tbody>
   </table>
