@@ -217,15 +217,15 @@
     <tbody>
       <tr>
         <td>alpha</td>
-        <td>{{ alpha.toFixed(2) }}</td>
+        <td>{{ alpha?.toFixed(2) }}</td>
       </tr>
       <tr>
         <td>beta</td>
-        <td>{{ beta.toFixed(2) }}</td>
+        <td>{{ beta?.toFixed(2) }}</td>
       </tr>
       <tr>
         <td>gamma</td>
-        <td>{{ gamma.toFixed(2) }}</td>
+        <td>{{ gamma?.toFixed(2) }}</td>
       </tr>
       <tr>
         <td>absolute</td>
@@ -334,6 +334,11 @@ export default {
         this.absolute = e.absolute
         this.webkitCompassAccuracy = e.webkitCompassAccuracy
         this.webkitCompassHeading = e.webkitCompassHeading
+      });
+      window.addEventListener('devicemotion', function (e) {
+        console.log('Rotation rate around the alpha axis: ' + e.rotationRate.alpha);
+        console.log('Rotation rate around the beta axis: ' + e.rotationRate.beta);
+        console.log('Rotation rate around the gamma axis: ' + e.rotationRate.gamma);
       });
     }
   },
