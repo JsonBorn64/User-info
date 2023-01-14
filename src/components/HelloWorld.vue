@@ -200,15 +200,15 @@
     <tbody>
       <tr>
         <td>Координата x</td>
-        <td>{{ x }}</td>
+        <td>{{ x.toFixed(2) }}</td>
       </tr>
       <tr>
         <td>Координата y</td>
-        <td>{{ y }}</td>
+        <td>{{ y.toFixed(2) }}</td>
       </tr>
       <tr>
         <td>Координата z</td>
-        <td>{{ z }}</td>
+        <td>{{ z.toFixed(2) }}</td>
       </tr>
     </tbody>
   </table>
