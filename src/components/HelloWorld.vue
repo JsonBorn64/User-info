@@ -7,6 +7,10 @@
         <td>{{ navigator.userAgentData.platform }}</td>
       </tr>
       <tr>
+        <td>Устройство мобильное</td>
+        <td>{{ navigator.userAgentData.mobile }}</td>
+      </tr>
+      <tr>
         <td>Количество ядер CPU:</td>
         <td>{{ navigator.hardwareConcurrency }}</td>
       </tr>
@@ -93,16 +97,12 @@
         <td>{{ navigator.language }}</td>
       </tr>
       <tr>
-        <td>Сайт из которого сюда пришел</td>
+        <td>Сайт из которого сюда попали</td>
         <td>{{ document?.referrer }}</td>
       </tr>
       <tr>
         <td>Количество страниц в истории данной вкладки</td>
         <td>{{ window.history.length }}</td>
-      </tr>
-      <tr>
-        <td>Устройство мобильное</td>
-        <td>{{ navigator.userAgentData.mobile }}</td>
       </tr>
     </tbody>
   </table>
@@ -319,7 +319,7 @@ export default {
       }
     },
     accelerometr() {
-      if ('Accelerometer' in window) {
+      if ('Accelerometer' in this.window) {
         const acl = new Accelerometer({ frequency: 60 });
         acl.addEventListener("reading", () => {
           this.x = acl.x
@@ -343,6 +343,7 @@ export default {
         this.rotationRateX = e.rotationRate.beta
         this.rotationRateY = e.rotationRate.gamma
         this.rotationRateZ = e.rotationRate.alpha
+        console.log('Rotation rate: ' + e.rotationRate.alpha + ' ' + e.rotationRate.beta + ' ' + e.rotationRate.gamma);
       });
     },
     getBattery() {
