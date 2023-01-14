@@ -301,6 +301,7 @@ export default {
       rotationRateX: 0,
       rotationRateY: 0,
       rotationRateZ: 0,
+      accelerationX: 0
     }
   },
   methods: {
