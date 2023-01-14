@@ -313,13 +313,13 @@ export default {
         }).catch(err => console.log('Не удается получить айпи адрес: ', err))
     },
     lightSensor() {
-      this.window.ondeviceproximity = function (event) {
+      this.window.ondeviceproximity = (event) => {
         this.deviceproximity = event.value
       }
-      this.window.ondevicelight = function (event) {
+      this.window.ondevicelight = (event) => {
         this.devicelight = event.value
       }
-      this.window.onuserproximity = function (event) {
+      this.window.onuserproximity = (event) => {
         this.userproximity = event.value
       }
     },
@@ -343,7 +343,7 @@ export default {
       });
     },
     deviceMotion() {
-      this.window.addEventListener('devicemotion', function (e) {
+      this.window.addEventListener('devicemotion', (e) => {
         this.rotationRateX = e.rotationRate.beta
         this.rotationRateY = e.rotationRate.gamma
         this.rotationRateZ = e.rotationRate.alpha
