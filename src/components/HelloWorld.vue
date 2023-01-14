@@ -319,12 +319,14 @@ export default {
       }
     },
     accelerometr() {
-      const acl = new Accelerometer({ frequency: 60 });
-      acl.addEventListener("reading", () => {
-        this.x = acl.x
-        this.y = acl.y
-        this.z = acl.z
-      });
+      if ('Accelerometer' in window) {
+        const acl = new Accelerometer({ frequency: 60 });
+        acl.addEventListener("reading", () => {
+          this.x = acl.x
+          this.y = acl.y
+          this.z = acl.z
+        });
+      }
     },
     deviceOrientation() {
       this.window.addEventListener('deviceorientation', (e) => {
