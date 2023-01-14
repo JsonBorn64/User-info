@@ -297,7 +297,7 @@ export default {
   watch: {
     alpha(newValue) {
       if (!newValue) return
-      document.body.style.transformOrigin = `center`;
+      document.body.style.transformOrigin = `top center`;
       document.body.style.transform = `rotateZ(${newValue-90}deg)`
     }
   },
