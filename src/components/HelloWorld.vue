@@ -250,6 +250,10 @@
         <td>По оси z</td>
         <td>{{ rotationRateZ.toFixed(2) }}</td>
       </tr>
+      <tr>
+        <td>accelerationX</td>
+        <td>{{ accelerationX.toFixed(2) }}</td>
+      </tr>
     </tbody>
   </table>
   <h1>Датчик света</h1>
@@ -319,14 +323,13 @@ export default {
       }
     },
     accelerometr() {
-      if ('Accelerometer' in this.window) {
-        const acl = new Accelerometer({ frequency: 60 });
-        acl.addEventListener("reading", () => {
-          this.x = acl.x
-          this.y = acl.y
-          this.z = acl.z
-        });
-      }
+      const acl = new Accelerometer({ frequency: 60 });
+      acl.addEventListener("reading", () => {
+        this.x = acl.x
+        this.y = acl.y
+        this.z = acl.z
+      });
+      acl.start();
     },
     deviceOrientation() {
       this.window.addEventListener('deviceorientation', (e) => {
@@ -343,7 +346,7 @@ export default {
         this.rotationRateX = e.rotationRate.beta
         this.rotationRateY = e.rotationRate.gamma
         this.rotationRateZ = e.rotationRate.alpha
-        console.log('Rotation rate: ' + e.rotationRate.alpha + ' ' + e.rotationRate.beta + ' ' + e.rotationRate.gamma);
+        this.accelerationX = e.acceleration.x
       });
     },
     getBattery() {
