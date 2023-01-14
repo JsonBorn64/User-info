@@ -292,14 +292,6 @@ export default {
       accelerationX: 0,
       accelerationY: 0,
       accelerationZ: 0,
-      drags: false
-    }
-  },
-  watch: {
-    alpha(newValue) {
-      if (!newValue || !drags) return
-      document.body.style.transformOrigin = `top center`;
-      document.body.style.transform = `rotateZ(${newValue-90}deg)`
     }
   },
   methods: {
