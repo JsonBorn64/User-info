@@ -44,7 +44,7 @@
         <td>Разрешение экрана</td>
         <td>
           {{ Math.round(screen.width * window.devicePixelRatio) }}
-           х 
+          х
           {{ Math.round(screen.height * window.devicePixelRatio) }}</td>
       </tr>
       <tr>
@@ -195,6 +195,40 @@
       </tr>
     </tbody>
   </table>
+  <h1 v-if="accelerometer">Акселерометр</h1>
+  <table v-if="accelerometer">
+    <tbody>
+      <tr>
+        <td>Координата x</td>
+        <td>{{ x }}</td>
+      </tr>
+      <tr>
+        <td>Координата y</td>
+        <td>{{ y }}</td>
+      </tr>
+      <tr>
+        <td>Координата z</td>
+        <td>{{ z }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <h1>Датчик света</h1>
+  <table>
+    <tbody>
+      <tr>
+        <td>devicelight</td>
+        <td>{{ devicelight }}</td>
+      </tr>
+      <tr>
+        <td>deviceproximity</td>
+        <td>{{ deviceproximity }}</td>
+      </tr>
+      <tr>
+        <td>userproximity</td>
+        <td>{{ userproximity }}</td>
+      </tr>
+    </tbody>
+  </table>
 </template>
 
 <script>
@@ -207,7 +241,14 @@ export default {
       connection: null,
       position: null,
       ipData: null,
-      clipboard: ''
+      clipboard: '',
+      deviceproximity: '',
+      devicelight: '',
+      userproximity: '',
+      accelerometer: true,
+      x: 0,
+      y: 0,
+      z: 0,
     }
   },
   methods: {
@@ -217,6 +258,40 @@ export default {
         .then(data => {
           this.ipData = data
         }).catch(err => console.log('Не удается получить айпи адрес: ', err))
+    },
+    strangeThings() {
+      if (typeof window.ondeviceproximity === "undefined") {
+        this.deviceproximity = "This browser does not support the ondeviceproximity event"
+      } else {
+        window.ondeviceproximity = function (event) {
+          this.deviceproximity = event.value
+        }
+      }
+      if (typeof window.ondevicelight === "undefined") {
+        this.devicelight = "This browser does not support the ondevicelight event"
+      } else {
+        window.ondevicelight = function (event) {
+          this.devicelight = event.value
+        }
+      }
+      if (typeof window.onuserproximity === "undefined") {
+        this.userproximity = "This browser does not support the onuserproximity event"
+      } else {
+        window.onuserproximity = function (event) {
+          this.userproximity = event.value
+        }
+      }
+      if ('Accelerometer' in this.window) {
+        const accelerometer = new Accelerometer();
+        accelerometer.addEventListener('reading', e => {
+          this.x = e.target.x
+          this.y = e.target.y
+          this.z = e.target.z
+        });
+        accelerometer.addEventListener('error', event => console.log(event.error.name, event.error.message));
+      } else {
+        this.accelerometer = false
+      }
     }
   },
   created() {
@@ -255,6 +330,7 @@ export default {
       console.log("Geolocation is not supported by this browser.");
     }
     this.getIpCity()
+    this.strangeThings()
   }
 }
 </script>
