@@ -1,5 +1,5 @@
 <template>
-  <h1 @click="drags = !drags">Устройство</h1>
+  <h1 @click="drags = true">Устройство</h1>
   <table>
     <tbody>
       <tr>
