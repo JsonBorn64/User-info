@@ -104,12 +104,6 @@
         <td>Устройство мобильное</td>
         <td>{{ navigator.userAgentData.mobile }}</td>
       </tr>
-      <tr>
-        <td>Brands</td>
-        <td>
-          <p v-for="item in navigator.userAgentData.brands">{{ item.brand }}, version: {{ item.version }}</p>
-        </td>
-      </tr>
     </tbody>
   </table>
   <h1>Сеть</h1>
@@ -195,8 +189,8 @@
       </tr>
     </tbody>
   </table>
-  <h1 v-if="accelerometer">Акселерометр</h1>
-  <table v-if="accelerometer">
+  <h1>Акселерометр</h1>
+  <table>
     <tbody>
       <tr>
         <td>Координата x</td>
@@ -217,15 +211,15 @@
     <tbody>
       <tr>
         <td>alpha</td>
-        <td>{{ alpha?.toFixed(2) }}</td>
+        <td>{{ alpha?.toFixed(2) }} deg</td>
       </tr>
       <tr>
         <td>beta</td>
-        <td>{{ beta?.toFixed(2) }}</td>
+        <td>{{ beta?.toFixed(2) }} deg</td>
       </tr>
       <tr>
         <td>gamma</td>
-        <td>{{ gamma?.toFixed(2) }}</td>
+        <td>{{ gamma?.toFixed(2) }} deg</td>
       </tr>
       <tr>
         <td>absolute</td>
@@ -241,12 +235,29 @@
       </tr>
     </tbody>
   </table>
+  <h1>Скорость вращения</h1>
+  <table>
+    <tbody>
+      <tr>
+        <td>По оси x</td>
+        <td>{{ rotationRateX.toFixed(2) }}</td>
+      </tr>
+      <tr>
+        <td>По оси y</td>
+        <td>{{ rotationRateY.toFixed(2) }}</td>
+      </tr>
+      <tr>
+        <td>По оси z</td>
+        <td>{{ rotationRateZ.toFixed(2) }}</td>
+      </tr>
+    </tbody>
+  </table>
   <h1>Датчик света</h1>
   <table>
     <tbody>
       <tr>
         <td>devicelight</td>
-        <td>{{ devicelight }}</td>
+        <td>{{ devicelight }} lux</td>
       </tr>
       <tr>
         <td>deviceproximity</td>
@@ -271,10 +282,9 @@ export default {
       position: null,
       ipData: null,
       clipboard: '',
-      deviceproximity: '',
-      devicelight: '',
-      userproximity: '',
-      accelerometer: true,
+      deviceproximity: 0,
+      devicelight: 0,
+      userproximity: 0,
       x: 0,
       y: 0,
       z: 0,
@@ -284,6 +294,9 @@ export default {
       absolute: '',
       webkitCompassHeading: '',
       webkitCompassAccuracy: '',
+      rotationRateX: 0,
+      rotationRateY: 0,
+      rotationRateZ: 0,
     }
   },
   methods: {
@@ -294,40 +307,27 @@ export default {
           this.ipData = data
         }).catch(err => console.log('Не удается получить айпи адрес: ', err))
     },
-    strangeThings() {
-      if (typeof window.ondeviceproximity === "undefined") {
-        this.deviceproximity = "This browser does not support the ondeviceproximity event"
-      } else {
-        window.ondeviceproximity = function (event) {
-          this.deviceproximity = event.value
-        }
+    lightSensor() {
+      this.window.ondeviceproximity = function (event) {
+        this.deviceproximity = event.value
       }
-      if (typeof window.ondevicelight === "undefined") {
-        this.devicelight = "This browser does not support the ondevicelight event"
-      } else {
-        window.ondevicelight = function (event) {
-          this.devicelight = event.value
-        }
+      this.window.ondevicelight = function (event) {
+        this.devicelight = event.value
       }
-      if (typeof window.onuserproximity === "undefined") {
-        this.userproximity = "This browser does not support the onuserproximity event"
-      } else {
-        window.onuserproximity = function (event) {
-          this.userproximity = event.value
-        }
+      this.window.onuserproximity = function (event) {
+        this.userproximity = event.value
       }
-      if ('Accelerometer' in this.window) {
-        const acl = new Accelerometer({ frequency: 60 });
-        acl.addEventListener("reading", () => {
-          this.x = acl.x
-          this.y = acl.y
-          this.z = acl.z
-        });
-        acl.start();
-      } else {
-        this.accelerometer = false
-      }
-      window.addEventListener('deviceorientation', (e) => {
+    },
+    accelerometr() {
+      const acl = new Accelerometer({ frequency: 60 });
+      acl.addEventListener("reading", () => {
+        this.x = acl.x
+        this.y = acl.y
+        this.z = acl.z
+      });
+    },
+    deviceOrientation() {
+      this.window.addEventListener('deviceorientation', (e) => {
         this.alpha = e.alpha
         this.beta = e.beta
         this.gamma = e.gamma
@@ -335,50 +335,54 @@ export default {
         this.webkitCompassAccuracy = e.webkitCompassAccuracy
         this.webkitCompassHeading = e.webkitCompassHeading
       });
-      window.addEventListener('devicemotion', function (e) {
-        console.log('Rotation rate around the alpha axis: ' + e.rotationRate.alpha);
-        console.log('Rotation rate around the beta axis: ' + e.rotationRate.beta);
-        console.log('Rotation rate around the gamma axis: ' + e.rotationRate.gamma);
+    },
+    deviceMotion() {
+      this.window.addEventListener('devicemotion', function (e) {
+        this.rotationRateX = e.rotationRate.beta
+        this.rotationRateY = e.rotationRate.gamma
+        this.rotationRateZ = e.rotationRate.alpha
       });
+    },
+    getBattery() {
+      if ('getBattery' in navigator) {
+        navigator.getBattery().then(battery => {
+          this.batteryLevel = battery.level * 100;
+          this.batteryCharging = battery.charging;
+          this.batteryTimeRemaining = battery.dischargingTime;
+
+          battery.addEventListener('levelchange', () => {
+            this.batteryLevel = battery.level * 100;
+          });
+
+          battery.addEventListener('chargingchange', () => {
+            this.batteryCharging = battery.charging;
+          });
+
+          battery.addEventListener('dischargingtimechange', () => {
+            this.batteryTimeRemaining = battery.dischargingTime;
+          });
+        });
+      }
     }
   },
   created() {
     navigator.clipboard.readText().then(clipText => {
       this.clipboard = clipText
     });
-    if ('getBattery' in navigator) {
-      navigator.getBattery().then(battery => {
-        this.batteryLevel = battery.level * 100;
-        this.batteryCharging = battery.charging;
-        this.batteryTimeRemaining = battery.dischargingTime;
-
-        battery.addEventListener('levelchange', () => {
-          this.batteryLevel = battery.level * 100;
-        });
-
-        battery.addEventListener('chargingchange', () => {
-          this.batteryCharging = battery.charging;
-        });
-
-        battery.addEventListener('dischargingtimechange', () => {
-          this.batteryTimeRemaining = battery.dischargingTime;
-        });
-      });
-    }
     if ('connection' in navigator) {
       this.connection = navigator.connection;
     }
   },
   mounted() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(position => {
-        this.position = position;
-      });
-    } else {
-      console.log("Geolocation is not supported by this browser.");
-    }
+    navigator.geolocation.getCurrentPosition(position => {
+      this.position = position;
+    });
     this.getIpCity()
-    this.strangeThings()
+    this.lightSensor()
+    this.accelerometr()
+    this.deviceOrientation()
+    this.deviceMotion()
+    this.getBattery()
   }
 }
 </script>
