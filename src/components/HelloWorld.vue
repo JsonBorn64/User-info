@@ -4,11 +4,11 @@
     <tbody>
       <tr>
         <td>Платформа:</td>
-        <td>{{ navigator.userAgentData.platform }}</td>
+        <td>{{ navigator?.userAgentData.platform }}</td>
       </tr>
       <tr>
         <td>Устройство мобильное</td>
-        <td>{{ navigator.userAgentData.mobile }}</td>
+        <td>{{ navigator?.userAgentData.mobile }}</td>
       </tr>
       <tr>
         <td>Количество ядер CPU:</td>
@@ -303,13 +303,17 @@ export default {
         }).catch(err => console.log('Не удается получить айпи адрес: ', err))
     },
     accelerometr() {
-      const acl = new Accelerometer({ frequency: 60 });
-      acl.addEventListener("reading", () => {
-        this.x = acl.x
-        this.y = acl.y
-        this.z = acl.z
-      });
-      acl.start();
+      try {
+        const acl = new Accelerometer({ frequency: 60 });
+        acl.addEventListener("reading", () => {
+          this.x = acl.x
+          this.y = acl.y
+          this.z = acl.z
+        });
+        acl.start();
+      } catch (e) {
+        console.log('Мазила топ');
+      }
     },
     deviceOrientation() {
       this.window.addEventListener('deviceorientation', (e) => {
